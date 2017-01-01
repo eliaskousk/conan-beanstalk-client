@@ -9,17 +9,13 @@ class BeanstalkClientConan(ConanFile):
     version = "1.3.0"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
-    options = {"shared": [True, False], "gtest": [True, False]}
-    default_options = "shared=True", "gtest=False"
+    options = {"shared": [True, False]}
+    default_options = "shared=True"
     url="http://github.com/eliaskousk/conan-beanstalk-client"
     license="https://opensource.org/licenses/MIT"
     exports= "CMakeLists.txt", "change_dylib_names.sh"
     zip_name = "v%s.tar.gz" % version
     unzipped_name = "beanstalk-client-%s" % version
-
-    def config(self):
-        if self.options.gtest == True:
-            self.requires.add("gtest/1.8.0@eliaskousk/stable", private=False)
 
     def source(self):
         url = "https://github.com/deepfryed/beanstalk-client/archive/%s" % self.zip_name
