@@ -7,7 +7,7 @@ environment:
     CONAN_UPLOAD: 1
     CONAN_REFERENCE: "beanstalk-client/1.3.0"
     CONAN_USERNAME: "eliaskousk"
-    CONAN_CHANNEL: "ci"
+    CONAN_CHANNEL: "stable"
     CONAN_TOTAL_PAGES: 4
     
     matrix:
