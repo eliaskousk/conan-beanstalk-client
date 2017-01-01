@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/eliaskousk/conan-beanstalk-client.svg?branch=release/1.3.0)](https://travis-ci.org/eliaskousk/conan-beanstalk-client)
+
 # conan-beanstalk-client
 
 [Conan.io](https://conan.io) package for Beanstalk Client library
