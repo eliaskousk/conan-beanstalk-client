@@ -2,6 +2,7 @@ from conans import ConanFile
 import os
 from conans.tools import download
 from conans.tools import unzip
+from conans.tools import replace_in_file
 from conans import CMake, ConfigureEnvironment
 
 class BeanstalkClientConan(ConanFile):
@@ -30,14 +31,34 @@ class BeanstalkClientConan(ConanFile):
 
     def build(self):
         env = ConfigureEnvironment(self)
-        env_line = env.command_line_env.replace('CFLAGS="', 'CFLAGS="-fPIC ')
+
+        self.output.warn(env.command_line_env)
+
+        # Fix makefile
+        text_to_replace = 'CFLAGS       = -Wall -Wno-sign-compare -g -I.'
+        replaced_text = '''CFLAGS       += -Wall -Wno-sign-compare -g -I.
+CPPFLAGS     += -Wall -Wno-sign-compare -g -I.
+'''
+        replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
+
+        text_to_replace = 'LDFLAGS      = -L. -lbeanstalk'
+        replaced_text = '#LDFLAGS      = -L. -lbeanstalk'
+        replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
+
+        text_to_replace = '	$(CPP) $(LINKER) -o $(SHAREDLIB)  beanstalk.o beanstalkcpp.o'
+        replaced_text = '	$(CPP) $(LDFLAGS) $(LINKER) -o $(SHAREDLIB)  beanstalk.o beanstalkcpp.o'
+        replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
+
+        text_to_replace = '	$(CPP) $(CPPFLAGS) -fPIC -c -o beanstalkcpp.o beanstalk.cc'
+        replaced_text = '	$(CPP) $(CPPFLAGS) -fPIC -c -o beanstalkcpp.o beanstalk.cc'
+        replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
 
         if self.options.shared:
             suffix = 'so'
         else:
             suffix = 'a'
 
-        self.run("cd %s && %s make libbeanstalk.%s" % (self.unzipped_name, env_line, suffix))
+        self.run("cd %s && %s make libbeanstalk.%s" % (self.unzipped_name, env.command_line_env, suffix))
 
     def package(self):
         if self.settings.os == "Macos" and self.options.shared:
