@@ -32,7 +32,7 @@ class BeanstalkClientConan(ConanFile):
     def build(self):
         env = ConfigureEnvironment(self)
 
-        self.output.warn(env.command_line_env)
+        # self.output.warn(env.command_line_env)
 
         # Fix makefile
         text_to_replace = 'CFLAGS       = -Wall -Wno-sign-compare -g -I.'
@@ -54,7 +54,10 @@ CPPFLAGS     += -Wall -Wno-sign-compare -g -I.
         replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
 
         if self.options.shared:
-            suffix = 'so'
+            if self.settings.os == "Macos":
+                suffix = 'dylib'
+            else:
+                suffix = 'so'
         else:
             suffix = 'a'
 
