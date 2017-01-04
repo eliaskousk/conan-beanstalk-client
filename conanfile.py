@@ -49,7 +49,7 @@ CPPFLAGS     += -Wall -Wno-sign-compare -g -I.
         replaced_text = '	$(CPP) $(LDFLAGS) $(LINKER) -o $(SHAREDLIB)  beanstalk.o beanstalkcpp.o'
         replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
 
-        text_to_replace = '	$(CPP) $(CPPFLAGS) -fPIC -c -o beanstalkcpp.o beanstalk.cc'
+        text_to_replace = '	$(CPP) $(CFLAGS) -fPIC -c -o beanstalkcpp.o beanstalk.cc'
         replaced_text = '	$(CPP) $(CPPFLAGS) -fPIC -c -o beanstalkcpp.o beanstalk.cc'
         replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
 
