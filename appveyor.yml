@@ -12,7 +12,7 @@ environment:
     
     matrix:
         - CONAN_CURRENT_PAGE: 1
-        - CONAN_CURRENT_PAGE: 2  
+        - CONAN_CURRENT_PAGE: 2
         - CONAN_CURRENT_PAGE: 3
         - CONAN_CURRENT_PAGE: 4
 
