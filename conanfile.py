@@ -37,7 +37,6 @@ class BeanstalkClientConan(ConanFile):
         # Fix makefile
         text_to_replace = 'CFLAGS       = -Wall -Wno-sign-compare -g -I.'
         replaced_text = '''CFLAGS       += -Wall -Wno-sign-compare -g -I.
-CPPFLAGS     += -Wall -Wno-sign-compare -g -I.
 '''
         replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
 
@@ -52,6 +51,16 @@ CPPFLAGS     += -Wall -Wno-sign-compare -g -I.
         text_to_replace = '	$(CPP) $(CFLAGS) -fPIC -c -o beanstalkcpp.o beanstalk.cc'
         replaced_text = '	$(CPP) $(CPPFLAGS) -fPIC -c -o beanstalkcpp.o beanstalk.cc'
         replace_in_file(os.path.join(self.unzipped_name, "makefile"), text_to_replace, replaced_text)
+
+        # Fix MSG_NOSIGNAL
+        text_to_replace = '#ifndef BS_READ_CHUNK_SIZE'
+        replaced_text = '''#ifndef MSG_NOSIGNAL
+#define MSG_NOSIGNAL 0x0 //Don't request NOSIGNAL on systems where this is not implemented.
+#endif
+
+#ifndef BS_READ_CHUNK_SIZE
+'''
+        replace_in_file(os.path.join(self.unzipped_name, "beanstalk.c"), text_to_replace, replaced_text)
 
         if self.options.shared:
             if self.settings.os == "Macos":
